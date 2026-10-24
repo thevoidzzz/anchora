@@ -1,8 +1,0 @@
-Metadata-Version: 2.4
-Name: anchora
-Version: 0.0.0
-Summary: Grounded assistant for internal operating manuals
-Requires-Python: >=3.12
-Requires-Dist: psycopg[binary]>=3.2
-Provides-Extra: dev
-Requires-Dist: pytest>=8; extra == "dev"
