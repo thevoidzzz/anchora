@@ -1,6 +1,7 @@
 """Domain types. This package does not import infrastructure or the API."""
 
-from anchora.domain.errors import ChunkConfigError, ManualError
+from anchora.domain.citation import AssembledAnswer, Citation, assemble_answer
+from anchora.domain.errors import ChunkConfigError, DuplicateRetrievedChunkError, ManualError
 from anchora.domain.manual import (
     DEFAULT_MAX_CHARS,
     DEFAULT_OVERLAP_CHARS,
@@ -12,9 +13,13 @@ from anchora.domain.manual import (
 __all__ = [
     "DEFAULT_MAX_CHARS",
     "DEFAULT_OVERLAP_CHARS",
+    "AssembledAnswer",
     "Chunk",
     "ChunkConfig",
     "ChunkConfigError",
+    "Citation",
+    "DuplicateRetrievedChunkError",
     "ManualError",
+    "assemble_answer",
     "parse_manual",
 ]
