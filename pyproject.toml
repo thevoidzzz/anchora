@@ -1,0 +1,9 @@
+[project]
+name = "anchora"
+version = "0.0.0"
+description = "Grounded assistant for internal operating manuals"
+requires-python = ">=3.12"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
