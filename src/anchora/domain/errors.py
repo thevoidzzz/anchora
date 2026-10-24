@@ -9,6 +9,10 @@ class ChunkConfigError(ValueError):
     """The character window cannot be used."""
 
 
+class IngestError(ValueError):
+    """The chunks cannot be stored as one document."""
+
+
 class DuplicateRetrievedChunkError(ValueError):
     """The same chunk id arrived twice in one retrieval."""
 
