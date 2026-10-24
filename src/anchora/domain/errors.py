@@ -13,6 +13,10 @@ class IngestError(ValueError):
     """The chunks cannot be stored as one document."""
 
 
+class SearchError(ValueError):
+    """The search cannot run. The role is operator or auditor."""
+
+
 class DuplicateRetrievedChunkError(ValueError):
     """The same chunk id arrived twice in one retrieval."""
 

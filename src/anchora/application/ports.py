@@ -3,7 +3,7 @@
 from collections.abc import Sequence
 from typing import Protocol
 
-from anchora.domain.manual import Chunk
+from anchora.domain.manual import Chunk, Role
 
 
 class DocumentCatalog(Protocol):
@@ -17,3 +17,6 @@ class DocumentCatalog(Protocol):
 
     def get(self, chunk_id: str) -> Chunk | None:
         """The stored chunk, or none when that id is not in the catalog."""
+
+    def search(self, term: str, role: Role) -> tuple[Chunk, ...]:
+        """Lexical matches this role may see. Audience both is included. Other roles are not."""
