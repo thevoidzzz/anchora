@@ -3,6 +3,17 @@ name = "anchora"
 version = "0.0.0"
 description = "Grounded assistant for internal operating manuals"
 requires-python = ">=3.12"
+dependencies = ["psycopg[binary]>=3.2"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8"]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

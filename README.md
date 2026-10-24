@@ -6,11 +6,11 @@ Grounded assistant for internal operating manuals. A citation is copied from the
 
 ## Tests
 
-GitHub Actions runs `pytest` on pull requests and on pushes to `main`. The job installs no model client and uses no API key.
+GitHub Actions runs `pytest` against PostgreSQL on pull requests and on pushes to `main`. The job installs no model client and uses no API key.
 
 ```bash
-pip install pytest
-pytest
+pip install -e ".[dev]"
+DATABASE_URL=postgresql://anchora@localhost:5432/anchora pytest
 ```
 
 ## Contributing
