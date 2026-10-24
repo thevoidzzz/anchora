@@ -9,7 +9,7 @@ import psycopg
 from psycopg.rows import dict_row
 
 from anchora.domain.errors import IngestError
-from anchora.domain.manual import Audience, Chunk
+from anchora.domain.manual import Audience, Chunk, Role
 
 _SCHEMA = Path(__file__).with_name("schema.sql").read_text(encoding="utf-8")
 
@@ -109,13 +109,34 @@ class PostgresCatalog:
             ).fetchone()
         if row is None:
             return None
-        return Chunk(
-            chunk_id=row["chunk_id"],
-            document_id=row["document_id"],
-            document_title=row["title"],
-            audience=cast(Audience, row["audience"]),
-            section_path=row["section_path"],
-            ordinal=row["ordinal"],
-            page=row["page"],
-            text=row["body"],
-        )
+        return _chunk(row)
+
+    def search(self, term: str, role: Role) -> tuple[Chunk, ...]:
+        with psycopg.connect(self._database_url, row_factory=dict_row) as conn:
+            rows = conn.execute(
+                """
+                SELECT c.chunk_id, c.document_id, d.title, d.audience,
+                       c.section_path, c.ordinal, c.page, c.body
+                FROM chunks c
+                JOIN documents d ON d.document_id = c.document_id
+                WHERE c.search_vector @@ plainto_tsquery('english', %s)
+                  AND d.audience IN (%s, 'both')
+                ORDER BY ts_rank(c.search_vector, plainto_tsquery('english', %s)) DESC,
+                         c.chunk_id
+                """,
+                (term, role, term),
+            ).fetchall()
+        return tuple(_chunk(row) for row in rows)
+
+
+def _chunk(row: dict[str, object]) -> Chunk:
+    return Chunk(
+        chunk_id=str(row["chunk_id"]),
+        document_id=str(row["document_id"]),
+        document_title=str(row["title"]),
+        audience=cast(Audience, row["audience"]),
+        section_path=str(row["section_path"]),
+        ordinal=int(str(row["ordinal"])),
+        page=int(str(row["page"])),
+        text=str(row["body"]),
+    )

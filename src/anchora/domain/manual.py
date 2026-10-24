@@ -7,6 +7,7 @@ from typing import Literal, cast
 from anchora.domain.errors import ChunkConfigError, ManualError
 
 Audience = Literal["operator", "auditor", "both"]
+Role = Literal["operator", "auditor"]
 
 DEFAULT_MAX_CHARS = 1500
 DEFAULT_OVERLAP_CHARS = 200
