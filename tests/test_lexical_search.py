@@ -4,7 +4,10 @@ import pytest
 
 from anchora.application import find_passages, ingest_manual
 from anchora.domain import SearchError
+from anchora.infrastructure.fixed_embedder import FixedEmbedder
 from anchora.infrastructure.postgres import PostgresCatalog
+
+_EMBEDDER = FixedEmbedder()
 
 
 def _manual(document_id: str, title: str, audience: str, body: str) -> str:
@@ -32,6 +35,7 @@ def test_an_exact_term_stays_inside_the_role(catalog: PostgresCatalog) -> None:
             _section("Book the batch", 4, "The desk books Meridian before noon."),
         ),
         catalog,
+        _EMBEDDER,
     )
     auditor = ingest_manual(
         _manual(
@@ -41,6 +45,7 @@ def test_an_exact_term_stays_inside_the_role(catalog: PostgresCatalog) -> None:
             _section("Sample the batch", 2, "The desk books Meridian before noon."),
         ),
         catalog,
+        _EMBEDDER,
     )
     shared = ingest_manual(
         _manual(
@@ -50,6 +55,7 @@ def test_an_exact_term_stays_inside_the_role(catalog: PostgresCatalog) -> None:
             _section("Codes", 1, "Meridian is the close code for that desk."),
         ),
         catalog,
+        _EMBEDDER,
     )
     operator_id = operator[0].chunk_id
     auditor_id = auditor[0].chunk_id

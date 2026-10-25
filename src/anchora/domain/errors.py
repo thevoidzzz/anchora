@@ -10,7 +10,11 @@ class ChunkConfigError(ValueError):
 
 
 class IngestError(ValueError):
-    """The chunks cannot be stored as one document."""
+    """The chunks cannot be stored."""
+
+
+class EmbeddingIdentityError(ValueError):
+    """The embedding model identity cannot be used."""
 
 
 class SearchError(ValueError):

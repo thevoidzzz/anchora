@@ -1,9 +1,11 @@
 """Domain types. This package does not import infrastructure or the API."""
 
 from anchora.domain.citation import AssembledAnswer, Citation, assemble_answer
+from anchora.domain.embedding import EmbeddingIdentity
 from anchora.domain.errors import (
     ChunkConfigError,
     DuplicateRetrievedChunkError,
+    EmbeddingIdentityError,
     IngestError,
     ManualError,
     SearchError,
@@ -26,6 +28,8 @@ __all__ = [
     "ChunkConfigError",
     "Citation",
     "DuplicateRetrievedChunkError",
+    "EmbeddingIdentity",
+    "EmbeddingIdentityError",
     "IngestError",
     "ManualError",
     "Role",

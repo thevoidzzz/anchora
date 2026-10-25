@@ -6,7 +6,9 @@ Grounded assistant for internal operating manuals. A citation is copied from the
 
 ## Tests
 
-GitHub Actions runs `pytest` against PostgreSQL on pull requests and on pushes to `main`. The job installs no model client and uses no API key.
+GitHub Actions runs `pytest` against PostgreSQL 16 with pgvector, on pull requests and on pushes to `main`. The job installs no model client and uses no API key. Tests embed with a deterministic stand-in.
+
+The local database needs the `vector` extension. The image `pgvector/pgvector:pg16` provides it.
 
 ```bash
 pip install -e ".[dev]"
