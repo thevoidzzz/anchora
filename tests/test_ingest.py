@@ -4,7 +4,10 @@ import pytest
 
 from anchora.application import ingest_manual
 from anchora.domain import IngestError, parse_manual
+from anchora.infrastructure.fixed_embedder import FixedEmbedder
 from anchora.infrastructure.postgres import PostgresCatalog
+
+_EMBEDDER = FixedEmbedder()
 
 
 def _manual(document_id: str, title: str, audience: str, body: str) -> str:
@@ -36,9 +39,9 @@ def test_reingest_keeps_ids_and_leaves_the_other_document(catalog: PostgresCatal
         "auditor",
         _section("Sample the journal", 2, "The auditor samples the journal."),
     )
-    first = ingest_manual(close, catalog)
-    ingest_manual(limits, catalog)
-    edited = ingest_manual(close.replace("ledger", "journal"), catalog)
+    first = ingest_manual(close, catalog, _EMBEDDER)
+    ingest_manual(limits, catalog, _EMBEDDER)
+    edited = ingest_manual(close.replace("ledger", "journal"), catalog, _EMBEDDER)
 
     assert [chunk.chunk_id for chunk in edited] == [chunk.chunk_id for chunk in first]
     assert catalog.ids_for("month-end-close") == (first[0].chunk_id,)
@@ -53,8 +56,12 @@ def test_reingest_keeps_ids_and_leaves_the_other_document(catalog: PostgresCatal
 def test_removing_a_section_drops_only_that_id(catalog: PostgresCatalog) -> None:
     both = _section("Open", 1, "Open the period.") + "\n" + _section("Close", 2, "Close the period.")
     manual = _manual("month-end-close", "Month-end close", "both", both)
-    ingest_manual(manual, catalog)
-    ingest_manual(_manual("month-end-close", "Month-end close", "both", _section("Open", 1, "Open the period.")), catalog)
+    ingest_manual(manual, catalog, _EMBEDDER)
+    ingest_manual(
+        _manual("month-end-close", "Month-end close", "both", _section("Open", 1, "Open the period.")),
+        catalog,
+        _EMBEDDER,
+    )
 
     assert catalog.ids_for("month-end-close") == ("month-end-close#Open#0",)
     assert catalog.get("month-end-close#Close#0") is None
@@ -71,5 +78,6 @@ def test_a_save_refuses_chunks_from_two_documents(catalog: PostgresCatalog) -> N
         _manual("approval-limits", "Approval limits", "auditor", _section("Sample", 2, "Sample the journal."))
     )
 
+    chunks = close + limits
     with pytest.raises(IngestError, match="one document"):
-        catalog.save(close + limits)
+        catalog.save(chunks, _EMBEDDER.embed(tuple(chunk.text for chunk in chunks)), _EMBEDDER.identity())
