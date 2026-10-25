@@ -6,10 +6,12 @@ from anchora.domain.errors import (
     ChunkConfigError,
     DuplicateRetrievedChunkError,
     EmbeddingIdentityError,
+    FusionError,
     IngestError,
     ManualError,
     SearchError,
 )
+from anchora.domain.fusion import FUSION_LIMIT, RRF_K, fuse_rankings
 from anchora.domain.manual import (
     DEFAULT_MAX_CHARS,
     DEFAULT_OVERLAP_CHARS,
@@ -30,10 +32,14 @@ __all__ = [
     "DuplicateRetrievedChunkError",
     "EmbeddingIdentity",
     "EmbeddingIdentityError",
+    "FUSION_LIMIT",
+    "FusionError",
     "IngestError",
     "ManualError",
+    "RRF_K",
     "Role",
     "SearchError",
     "assemble_answer",
+    "fuse_rankings",
     "parse_manual",
 ]

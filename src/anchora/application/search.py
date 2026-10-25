@@ -4,6 +4,7 @@ from typing import cast
 
 from anchora.application.ports import DocumentCatalog, Embedder
 from anchora.domain.errors import SearchError
+from anchora.domain.fusion import FUSION_LIMIT, RRF_K, fuse_rankings
 from anchora.domain.manual import Chunk, Role
 
 _ROLES = frozenset({"operator", "auditor"})
@@ -26,6 +27,37 @@ def find_nearest(question: str, role: str, catalog: DocumentCatalog, embedder: E
     if len(vectors) != 1:
         raise SearchError("the embedder must return one query vector")
     return catalog.nearest(vectors[0], checked, embedder.identity())
+
+
+def retrieve(
+    question: str,
+    role: str,
+    catalog: DocumentCatalog,
+    embedder: Embedder,
+    *,
+    k: int = RRF_K,
+    limit: int = FUSION_LIMIT,
+) -> tuple[Chunk, ...]:
+    """Fuse the lexical list and the nearest-neighbor list.
+
+    A passage in both lists can outrank the leader of one list. The text rank and the
+    cosine distance are not added.
+    """
+
+    lexical = find_passages(question, role, catalog)
+    vector = find_nearest(question, role, catalog, embedder)
+    by_id: dict[str, Chunk] = {}
+    for chunk in (*lexical, *vector):
+        by_id.setdefault(chunk.chunk_id, chunk)
+    order = fuse_rankings(
+        (
+            tuple(chunk.chunk_id for chunk in lexical),
+            tuple(chunk.chunk_id for chunk in vector),
+        ),
+        k=k,
+        limit=limit,
+    )
+    return tuple(by_id[chunk_id] for chunk_id in order)
 
 
 def _require_role(role: str) -> Role:

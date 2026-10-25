@@ -21,6 +21,10 @@ class SearchError(ValueError):
     """The search cannot run. The role is operator or auditor."""
 
 
+class FusionError(ValueError):
+    """The rankings cannot be fused."""
+
+
 class DuplicateRetrievedChunkError(ValueError):
     """The same chunk id arrived twice in one retrieval."""
 
