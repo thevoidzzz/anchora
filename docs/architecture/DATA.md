@@ -25,7 +25,7 @@ Cada fila guarda el modelo de embedding con nombre y versión. Una ingesta que m
 
 ## Búsqueda
 
-Dos consultas, las dos con `WHERE` de audiencia del rol, y luego fusión por reciprocal rank fusion. La configuración de `tsvector` de esta versión es `english`. [ADR-0008](../adr/0008-public-corpus-is-english.md). No se suman el score de `tsvector` y la distancia del vector: no viven en la misma escala. [ADR-0002](../adr/0002-role-filter-before-the-model.md). [ADR-0003](../adr/0003-reciprocal-rank-fusion.md).
+Dos consultas, las dos con `WHERE` de audiencia del rol, y luego fusión por reciprocal rank fusion. `k` es 60, el rank empieza en 1, y el score de un trozo es la suma de `1/(k+rank)` sobre las listas en las que aparece. La configuración de `tsvector` de esta versión es `english`. [ADR-0008](../adr/0008-public-corpus-is-english.md). No se suman el score de `tsvector` y la distancia del vector: no viven en la misma escala. [ADR-0002](../adr/0002-role-filter-before-the-model.md). [ADR-0003](../adr/0003-reciprocal-rank-fusion.md).
 
 La búsqueda vectorial de esta versión es exacta, `ORDER BY` distancia coseno (`<=>`), sin umbral de similitud. El corpus de demostración no justifica un índice aproximado: la migración no crea HNSW ni IVFFlat. Un índice aproximado entra cuando una medición de latencia lo pida, con un ADR nuevo. [ADR-0004](../adr/0004-exact-vector-search-until-measured.md).
 
@@ -33,6 +33,6 @@ El doble de pruebas no llama a un proveedor. Devuelve vectores fijos. La prueba 
 
 ## Tope
 
-La pregunta tiene un máximo de caracteres. Cada trozo que viaja al modelo tiene un máximo. El número de pasajes enviados al modelo es el top de la fusión, pequeño y fijo. Esos topes están en configuración, con test de que un exceso se rechaza o se corta en el borde definido, no en silencio a mitad de una cita.
+La pregunta tiene un máximo de caracteres. Cada trozo que viaja al modelo tiene un máximo. El número de pasajes que sale de la fusión es 5, y un exceso se corta en ese borde.
 
 La cita que publica esta versión es la ventana entera. El servidor no la recorta ni la sustituye por una frase del borrador.
