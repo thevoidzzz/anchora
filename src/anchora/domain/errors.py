@@ -21,6 +21,10 @@ class SearchError(ValueError):
     """The search cannot run. The role is operator or auditor."""
 
 
+class RequestError(ValueError):
+    """The question cannot be accepted."""
+
+
 class FusionError(ValueError):
     """The rankings cannot be fused."""
 
