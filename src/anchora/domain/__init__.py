@@ -9,9 +9,12 @@ from anchora.domain.errors import (
     FusionError,
     IngestError,
     ManualError,
+    RequestError,
     SearchError,
 )
 from anchora.domain.fusion import FUSION_LIMIT, RRF_K, fuse_rankings
+from anchora.domain.limits import QUESTION_MAX_CHARS
+from anchora.domain.model import ModelCompletion
 from anchora.domain.manual import (
     DEFAULT_MAX_CHARS,
     DEFAULT_OVERLAP_CHARS,
@@ -36,7 +39,10 @@ __all__ = [
     "FusionError",
     "IngestError",
     "ManualError",
+    "ModelCompletion",
+    "QUESTION_MAX_CHARS",
     "RRF_K",
+    "RequestError",
     "Role",
     "SearchError",
     "assemble_answer",

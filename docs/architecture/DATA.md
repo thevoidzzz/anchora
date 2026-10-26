@@ -33,6 +33,6 @@ El doble de pruebas no llama a un proveedor. Devuelve vectores fijos. La prueba 
 
 ## Tope
 
-La pregunta tiene un máximo de caracteres. Cada trozo que viaja al modelo tiene un máximo. El número de pasajes que sale de la fusión es 5, y un exceso se corta en ese borde.
+La pregunta tiene un máximo de 2000 caracteres. Por encima de eso, o si queda vacía, no hay búsqueda ni llamada al modelo. Cada trozo que viaja al modelo es la ventana ya troceada, entera. El número de pasajes que sale de la fusión es 5, y un exceso se corta en ese borde.
 
 La cita que publica esta versión es la ventana entera. El servidor no la recorta ni la sustituye por una frase del borrador.

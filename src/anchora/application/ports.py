@@ -5,6 +5,7 @@ from typing import Protocol
 
 from anchora.domain.embedding import EmbeddingIdentity
 from anchora.domain.manual import Chunk, Role
+from anchora.domain.model import ModelCompletion
 
 
 class Embedder(Protocol):
@@ -47,3 +48,10 @@ class DocumentCatalog(Protocol):
         identity: EmbeddingIdentity,
     ) -> tuple[Chunk, ...]:
         """Every chunk this role may see, nearest cosine distance first. No similarity cutoff."""
+
+
+class LanguageModel(Protocol):
+    """Drafts an answer from passages the catalog already filtered. It does not write citations."""
+
+    def complete(self, question: str, passages: Sequence[Chunk]) -> ModelCompletion:
+        """Return a draft and the chunk ids to cite. The server copies the excerpts."""
