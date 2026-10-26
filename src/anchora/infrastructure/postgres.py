@@ -2,7 +2,8 @@
 
 import hashlib
 import math
-from collections.abc import Sequence
+from collections.abc import Iterator, Sequence
+from contextlib import contextmanager
 from pathlib import Path
 from typing import cast
 
@@ -10,7 +11,7 @@ import psycopg
 from psycopg.rows import dict_row
 
 from anchora.domain.embedding import EmbeddingIdentity
-from anchora.domain.errors import IngestError, SearchError
+from anchora.domain.errors import CatalogUnavailable, IngestError, SearchError
 from anchora.domain.manual import Audience, Chunk, Role
 
 _SCHEMA = Path(__file__).with_name("schema.sql").read_text(encoding="utf-8")
@@ -23,7 +24,7 @@ class PostgresCatalog:
         self._database_url = database_url
 
     def ensure_schema(self) -> None:
-        with psycopg.connect(self._database_url) as conn:
+        with self._connection() as conn:
             conn.execute("CREATE EXTENSION IF NOT EXISTS vector")
             if _chunks_lack_embedding(conn):
                 conn.execute("DROP TABLE IF EXISTS chunks")
@@ -31,7 +32,7 @@ class PostgresCatalog:
             conn.execute(_SCHEMA)
 
     def clear(self) -> None:
-        with psycopg.connect(self._database_url) as conn:
+        with self._connection() as conn:
             conn.execute("TRUNCATE documents CASCADE")
 
     def save(
@@ -69,7 +70,7 @@ class PostgresCatalog:
             )
             for chunk, vector in zip(chunks, vectors, strict=True)
         ]
-        with psycopg.connect(self._database_url) as conn:
+        with self._connection() as conn:
             _reject_other_model(conn, identity)
             conn.execute(
                 """
@@ -108,7 +109,7 @@ class PostgresCatalog:
             )
 
     def ids_for(self, document_id: str) -> tuple[str, ...]:
-        with psycopg.connect(self._database_url, row_factory=dict_row) as conn:
+        with self._connection(row_factory=dict_row) as conn:
             rows = conn.execute(
                 """
                 SELECT chunk_id FROM chunks
@@ -120,7 +121,7 @@ class PostgresCatalog:
         return tuple(row["chunk_id"] for row in rows)
 
     def get(self, chunk_id: str) -> Chunk | None:
-        with psycopg.connect(self._database_url, row_factory=dict_row) as conn:
+        with self._connection(row_factory=dict_row) as conn:
             row = conn.execute(
                 """
                 SELECT c.chunk_id, c.document_id, d.title, d.audience,
@@ -136,7 +137,7 @@ class PostgresCatalog:
         return _chunk(row)
 
     def search(self, term: str, role: Role) -> tuple[Chunk, ...]:
-        with psycopg.connect(self._database_url, row_factory=dict_row) as conn:
+        with self._connection(row_factory=dict_row) as conn:
             rows = conn.execute(
                 """
                 SELECT c.chunk_id, c.document_id, d.title, d.audience,
@@ -153,7 +154,7 @@ class PostgresCatalog:
         return tuple(_chunk(row) for row in rows)
 
     def embedding_identity(self) -> EmbeddingIdentity | None:
-        with psycopg.connect(self._database_url) as conn:
+        with self._connection() as conn:
             return _stored_identity(conn)
 
     def nearest(self, vector: Sequence[float], role: Role, identity: EmbeddingIdentity) -> tuple[Chunk, ...]:
@@ -166,7 +167,7 @@ class PostgresCatalog:
             literal = _vector_literal(vector, identity.dimensions)
         except IngestError as exc:
             raise SearchError(str(exc)) from exc
-        with psycopg.connect(self._database_url, row_factory=dict_row) as conn:
+        with self._connection(row_factory=dict_row) as conn:
             rows = conn.execute(
                 """
                 SELECT c.chunk_id, c.document_id, d.title, d.audience,
@@ -181,6 +182,14 @@ class PostgresCatalog:
                 (role, identity.name, identity.version, literal),
             ).fetchall()
         return tuple(_chunk(row) for row in rows)
+
+    @contextmanager
+    def _connection(self, **kwargs: object) -> Iterator[psycopg.Connection]:
+        try:
+            with psycopg.connect(self._database_url, **kwargs) as conn:
+                yield conn
+        except psycopg.OperationalError as exc:
+            raise CatalogUnavailable("the catalog is unavailable") from exc
 
 
 def _chunks_lack_embedding(conn: psycopg.Connection) -> bool:

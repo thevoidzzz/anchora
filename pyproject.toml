@@ -3,10 +3,10 @@ name = "anchora"
 version = "0.0.0"
 description = "Grounded assistant for internal operating manuals"
 requires-python = ">=3.12"
-dependencies = ["psycopg[binary]>=3.2"]
+dependencies = ["psycopg[binary]>=3.2", "fastapi>=0.115"]
 
 [project.optional-dependencies]
-dev = ["pytest>=8"]
+dev = ["pytest>=8", "httpx2>=2"]
 
 [build-system]
 requires = ["setuptools>=68"]
