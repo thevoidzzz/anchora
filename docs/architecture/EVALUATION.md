@@ -35,7 +35,7 @@ Hit@5 y recall@5 se calculan sobre las preguntas que tienen evidencia para ese r
 
 Faithfulness. Exige un juez y un contraste con personas. Hasta entonces, Anchora no afirma que la respuesta se desprenda del pasaje. Afirma que el pasaje está y que la cita es real.
 
-Latencia p95 y coste por respuesta salen del log de la corrida de evaluación, no de una sola llamada manual.
+Latencia p95 y el total de tokens salen del log de la corrida de evaluación, no de una sola llamada manual. Esta versión no imprime un importe.
 
 ## Antes y después
 
@@ -43,4 +43,6 @@ La primera corrida guardada es léxico más vector sin rerank. El rerank, si ent
 
 ## Comando
 
-Un comando local lee el conjunto, corre retrieval (y, en las preguntas de respuesta, el contrato completo con el doble o con el modelo configurado) y escribe el informe. CI de esta versión corre los tests con dobles. La corrida con modelo de pago no es obligatoria en CI: si lo fuera, el build dependería de una clave y de una factura. El informe con modelo real se genera a mano y se pega en el README con la fecha.
+El informe separa hit@5 y recall@5 de los rechazos. Hit@5 y recall@5 usan solo las preguntas con evidencia: el recall es micro, las secciones distintas presentes en los cinco primeros trozos sobre las secciones relevantes. Un trozo de más no cuenta. Los rechazos correctos, los indebidos (se rechazó una pregunta con evidencia) y los omitidos (se contestó una pregunta que debía rechazarse) van en líneas distintas. La validez de cita es la fracción de extractos idénticos al trozo guardado; si hay citas y no es 1, el comando termina con error. El informe nombra el modelo de embedding y el modelo de lenguaje. Imprime latencia p95 y tokens. No imprime un importe: esta versión no tiene una tarifa.
+
+CI de esta versión corre los tests con dobles. La corrida con modelo de pago no es obligatoria en CI: si lo fuera, el build dependería de una clave y de una factura. El informe con modelo real se genera a mano y se pega en el README con la fecha.

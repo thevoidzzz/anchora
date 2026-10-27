@@ -12,6 +12,7 @@ from anchora.domain.errors import (
     ManualError,
     ModelSchemaError,
     ModelTimeout,
+    EvalError,
     RequestError,
     SearchError,
 )
@@ -39,6 +40,7 @@ __all__ = [
     "DuplicateRetrievedChunkError",
     "EmbeddingIdentity",
     "EmbeddingIdentityError",
+    "EvalError",
     "FUSION_LIMIT",
     "FusionError",
     "IngestError",
