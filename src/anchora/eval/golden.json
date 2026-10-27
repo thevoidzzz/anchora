@@ -1,0 +1,450 @@
+[
+  {
+    "id": "tie-out",
+    "role": "operator",
+    "question": "TB-17",
+    "relevant_sections": [
+      "month-end-close#Tie out the trial balance"
+    ],
+    "expect_refusal": false
+  },
+  {
+    "id": "book-accruals",
+    "role": "operator",
+    "question": "JE-4419",
+    "relevant_sections": [
+      "month-end-close#Book accruals"
+    ],
+    "expect_refusal": false
+  },
+  {
+    "id": "lock-period",
+    "role": "operator",
+    "question": "LOCK-3",
+    "relevant_sections": [
+      "month-end-close#Lock the period"
+    ],
+    "expect_refusal": false
+  },
+  {
+    "id": "reopen-period",
+    "role": "operator",
+    "question": "reopen log",
+    "relevant_sections": [
+      "month-end-close#Reopen a period"
+    ],
+    "expect_refusal": false
+  },
+  {
+    "id": "bank-recon",
+    "role": "operator",
+    "question": "CASH-9",
+    "relevant_sections": [
+      "month-end-close#Bank reconciliation"
+    ],
+    "expect_refusal": false
+  },
+  {
+    "id": "inventory-count",
+    "role": "operator",
+    "question": "WH-4",
+    "relevant_sections": [
+      "month-end-close#Inventory count"
+    ],
+    "expect_refusal": false
+  },
+  {
+    "id": "intercompany",
+    "role": "operator",
+    "question": "IC-22",
+    "relevant_sections": [
+      "month-end-close#Intercompany confirmation"
+    ],
+    "expect_refusal": false
+  },
+  {
+    "id": "flux-review",
+    "role": "operator",
+    "question": "FLUX-8",
+    "relevant_sections": [
+      "month-end-close#Flux review"
+    ],
+    "expect_refusal": false
+  },
+  {
+    "id": "controller-signoff",
+    "role": "operator",
+    "question": "SIGN-1",
+    "relevant_sections": [
+      "month-end-close#Controller sign-off"
+    ],
+    "expect_refusal": false
+  },
+  {
+    "id": "payroll-accrual",
+    "role": "operator",
+    "question": "PAY-6",
+    "relevant_sections": [
+      "month-end-close#Payroll accrual"
+    ],
+    "expect_refusal": false
+  },
+  {
+    "id": "fixed-assets",
+    "role": "operator",
+    "question": "FA-11",
+    "relevant_sections": [
+      "month-end-close#Fixed assets"
+    ],
+    "expect_refusal": false
+  },
+  {
+    "id": "revenue-cutoff",
+    "role": "operator",
+    "question": "REV-2",
+    "relevant_sections": [
+      "month-end-close#Revenue cutoff"
+    ],
+    "expect_refusal": false
+  },
+  {
+    "id": "tax-pack",
+    "role": "operator",
+    "question": "TAX-5",
+    "relevant_sections": [
+      "month-end-close#Tax pack"
+    ],
+    "expect_refusal": false
+  },
+  {
+    "id": "velora-schedule",
+    "role": "operator",
+    "question": "VELORA",
+    "relevant_sections": [
+      "month-end-close#Velora schedule"
+    ],
+    "expect_refusal": false
+  },
+  {
+    "id": "sample-journal",
+    "role": "auditor",
+    "question": "SMP-30",
+    "relevant_sections": [
+      "approval-limits#Sample the journal"
+    ],
+    "expect_refusal": false
+  },
+  {
+    "id": "approval-matrix",
+    "role": "auditor",
+    "question": "MTX-25",
+    "relevant_sections": [
+      "approval-limits#Approval matrix"
+    ],
+    "expect_refusal": false
+  },
+  {
+    "id": "segregation",
+    "role": "auditor",
+    "question": "SOD-7",
+    "relevant_sections": [
+      "approval-limits#Segregation of duties"
+    ],
+    "expect_refusal": false
+  },
+  {
+    "id": "exception-log",
+    "role": "auditor",
+    "question": "WAV-14",
+    "relevant_sections": [
+      "approval-limits#Exception log"
+    ],
+    "expect_refusal": false
+  },
+  {
+    "id": "vendor-callback",
+    "role": "auditor",
+    "question": "CALL-19",
+    "relevant_sections": [
+      "approval-limits#Vendor bank account"
+    ],
+    "expect_refusal": false
+  },
+  {
+    "id": "three-way-match",
+    "role": "auditor",
+    "question": "MATCH-3",
+    "relevant_sections": [
+      "approval-limits#Three-way match"
+    ],
+    "expect_refusal": false
+  },
+  {
+    "id": "meridian-operator",
+    "role": "operator",
+    "question": "Meridian",
+    "relevant_sections": [
+      "close-codes#Meridian"
+    ],
+    "expect_refusal": false
+  },
+  {
+    "id": "meridian-auditor",
+    "role": "auditor",
+    "question": "Meridian",
+    "relevant_sections": [
+      "close-codes#Meridian"
+    ],
+    "expect_refusal": false
+  },
+  {
+    "id": "calendar-operator",
+    "role": "operator",
+    "question": "CAL-1",
+    "relevant_sections": [
+      "close-codes#Shared calendar"
+    ],
+    "expect_refusal": false
+  },
+  {
+    "id": "calendar-auditor",
+    "role": "auditor",
+    "question": "CAL-1",
+    "relevant_sections": [
+      "close-codes#Shared calendar"
+    ],
+    "expect_refusal": false
+  },
+  {
+    "id": "tie-out-which-step",
+    "role": "operator",
+    "question": "tie-out code TB-17",
+    "relevant_sections": [
+      "month-end-close#Tie out the trial balance"
+    ],
+    "expect_refusal": false
+  },
+  {
+    "id": "lock-which-effect",
+    "role": "operator",
+    "question": "lock code LOCK-3",
+    "relevant_sections": [
+      "month-end-close#Lock the period"
+    ],
+    "expect_refusal": false
+  },
+  {
+    "id": "cash-which-recon",
+    "role": "operator",
+    "question": "recon code CASH-9",
+    "relevant_sections": [
+      "month-end-close#Bank reconciliation"
+    ],
+    "expect_refusal": false
+  },
+  {
+    "id": "warehouse-which-count",
+    "role": "operator",
+    "question": "count code WH-4",
+    "relevant_sections": [
+      "month-end-close#Inventory count"
+    ],
+    "expect_refusal": false
+  },
+  {
+    "id": "signoff-which-package",
+    "role": "operator",
+    "question": "sign-off code SIGN-1",
+    "relevant_sections": [
+      "month-end-close#Controller sign-off"
+    ],
+    "expect_refusal": false
+  },
+  {
+    "id": "sample-which-check",
+    "role": "auditor",
+    "question": "sample code SMP-30",
+    "relevant_sections": [
+      "approval-limits#Sample the journal"
+    ],
+    "expect_refusal": false
+  },
+  {
+    "id": "matrix-which-payments",
+    "role": "auditor",
+    "question": "matrix code MTX-25",
+    "relevant_sections": [
+      "approval-limits#Approval matrix"
+    ],
+    "expect_refusal": false
+  },
+  {
+    "id": "waiver-which-exception",
+    "role": "auditor",
+    "question": "waiver code WAV-14",
+    "relevant_sections": [
+      "approval-limits#Exception log"
+    ],
+    "expect_refusal": false
+  },
+  {
+    "id": "tie-out-and-lock",
+    "role": "operator",
+    "question": "tie-out",
+    "relevant_sections": [
+      "month-end-close#Tie out the trial balance",
+      "month-end-close#Lock the period"
+    ],
+    "expect_refusal": false
+  },
+  {
+    "id": "sample-and-matrix",
+    "role": "auditor",
+    "question": "matrix",
+    "relevant_sections": [
+      "approval-limits#Approval matrix",
+      "approval-limits#Exception log"
+    ],
+    "expect_refusal": false
+  },
+  {
+    "id": "signoff-and-warehouse",
+    "role": "operator",
+    "question": "cutoff",
+    "relevant_sections": [
+      "month-end-close#Payroll accrual",
+      "month-end-close#Revenue cutoff",
+      "month-end-close#Velora schedule"
+    ],
+    "expect_refusal": false
+  },
+  {
+    "id": "paraphrase-accrual",
+    "role": "operator",
+    "question": "When is the estimate journal recorded?",
+    "relevant_sections": [
+      "month-end-close#Book accruals"
+    ],
+    "expect_refusal": false
+  },
+  {
+    "id": "paraphrase-meridian",
+    "role": "operator",
+    "question": "What label identifies that workstation group?",
+    "relevant_sections": [
+      "close-codes#Meridian"
+    ],
+    "expect_refusal": false
+  },
+  {
+    "id": "paraphrase-inventory",
+    "role": "operator",
+    "question": "What has to be typed before the stock ledger shuts?",
+    "relevant_sections": [
+      "month-end-close#Inventory count"
+    ],
+    "expect_refusal": false
+  },
+  {
+    "id": "paraphrase-matrix",
+    "role": "auditor",
+    "question": "When does a disbursement need another person to authorize it?",
+    "relevant_sections": [
+      "approval-limits#Approval matrix"
+    ],
+    "expect_refusal": false
+  },
+  {
+    "id": "paraphrase-bank",
+    "role": "operator",
+    "question": "How is the printout from the financial institution compared with the money ledger?",
+    "relevant_sections": [
+      "month-end-close#Bank reconciliation"
+    ],
+    "expect_refusal": false
+  },
+  {
+    "id": "paraphrase-segregation",
+    "role": "auditor",
+    "question": "Can one employee both draft and authorize the same entry?",
+    "relevant_sections": [
+      "approval-limits#Segregation of duties"
+    ],
+    "expect_refusal": false
+  },
+  {
+    "id": "accrual-as-auditor",
+    "role": "auditor",
+    "question": "JE-4419",
+    "relevant_sections": [
+      "month-end-close#Book accruals"
+    ],
+    "expect_refusal": true
+  },
+  {
+    "id": "warehouse-as-auditor",
+    "role": "auditor",
+    "question": "WH-4",
+    "relevant_sections": [
+      "month-end-close#Inventory count"
+    ],
+    "expect_refusal": true
+  },
+  {
+    "id": "velora-as-auditor",
+    "role": "auditor",
+    "question": "VELORA",
+    "relevant_sections": [
+      "month-end-close#Velora schedule"
+    ],
+    "expect_refusal": true
+  },
+  {
+    "id": "sample-as-operator",
+    "role": "operator",
+    "question": "SMP-30",
+    "relevant_sections": [
+      "approval-limits#Sample the journal"
+    ],
+    "expect_refusal": true
+  },
+  {
+    "id": "matrix-as-operator",
+    "role": "operator",
+    "question": "MTX-25",
+    "relevant_sections": [
+      "approval-limits#Approval matrix"
+    ],
+    "expect_refusal": true
+  },
+  {
+    "id": "callback-as-operator",
+    "role": "operator",
+    "question": "CALL-19",
+    "relevant_sections": [
+      "approval-limits#Vendor bank account"
+    ],
+    "expect_refusal": true
+  },
+  {
+    "id": "cafeteria-wifi",
+    "role": "operator",
+    "question": "What is the cafeteria wifi password?",
+    "relevant_sections": [],
+    "expect_refusal": true
+  },
+  {
+    "id": "parking-benefit",
+    "role": "auditor",
+    "question": "What is the staff parking benefit?",
+    "relevant_sections": [],
+    "expect_refusal": true
+  },
+  {
+    "id": "server-room-key",
+    "role": "operator",
+    "question": "Where is the server room key kept?",
+    "relevant_sections": [],
+    "expect_refusal": true
+  }
+]
