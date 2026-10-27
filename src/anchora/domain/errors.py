@@ -25,6 +25,18 @@ class RequestError(ValueError):
     """The question cannot be accepted."""
 
 
+class CatalogUnavailable(Exception):
+    """The catalog cannot be reached."""
+
+
+class ModelSchemaError(Exception):
+    """The model response did not match the schema."""
+
+
+class ModelTimeout(Exception):
+    """The model did not respond in time."""
+
+
 class FusionError(ValueError):
     """The rankings cannot be fused."""
 

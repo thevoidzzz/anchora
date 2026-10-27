@@ -3,12 +3,15 @@
 from anchora.domain.citation import AssembledAnswer, Citation, assemble_answer
 from anchora.domain.embedding import EmbeddingIdentity
 from anchora.domain.errors import (
+    CatalogUnavailable,
     ChunkConfigError,
     DuplicateRetrievedChunkError,
     EmbeddingIdentityError,
     FusionError,
     IngestError,
     ManualError,
+    ModelSchemaError,
+    ModelTimeout,
     RequestError,
     SearchError,
 )
@@ -32,6 +35,7 @@ __all__ = [
     "ChunkConfig",
     "ChunkConfigError",
     "Citation",
+    "CatalogUnavailable",
     "DuplicateRetrievedChunkError",
     "EmbeddingIdentity",
     "EmbeddingIdentityError",
@@ -40,6 +44,8 @@ __all__ = [
     "IngestError",
     "ManualError",
     "ModelCompletion",
+    "ModelSchemaError",
+    "ModelTimeout",
     "QUESTION_MAX_CHARS",
     "RRF_K",
     "RequestError",

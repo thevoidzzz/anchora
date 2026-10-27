@@ -1,6 +1,6 @@
 """Answer a question from retrieved passages, or refuse before calling the model."""
 
-from collections.abc import Callable
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 from time import perf_counter
 from typing import Literal
@@ -8,8 +8,10 @@ from typing import Literal
 from anchora.application.ports import DocumentCatalog, Embedder, LanguageModel
 from anchora.application.search import retrieve
 from anchora.domain.citation import Citation, assemble_answer
-from anchora.domain.errors import RequestError
+from anchora.domain.errors import ModelSchemaError, RequestError
 from anchora.domain.limits import QUESTION_MAX_CHARS
+from anchora.domain.manual import Chunk
+from anchora.domain.model import ModelCompletion
 
 
 @dataclass(frozen=True, slots=True)
@@ -58,7 +60,7 @@ def answer_question(
             generation_ms=0.0,
         )
     started = clock()
-    completion = model.complete(question, passages)
+    completion = _complete(model, question, passages)
     generation_ms = (clock() - started) * 1000
     assembled = assemble_answer(completion.draft, completion.chunk_ids, passages)
     return Answer(
@@ -72,3 +74,12 @@ def answer_question(
         retrieval_ms=retrieval_ms,
         generation_ms=generation_ms,
     )
+
+
+def _complete(model: LanguageModel, question: str, passages: Sequence[Chunk]) -> ModelCompletion:
+    """Call the model. A schema mismatch is tried once more, and a timeout is not."""
+
+    try:
+        return model.complete(question, passages)
+    except ModelSchemaError:
+        return model.complete(question, passages)

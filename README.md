@@ -4,6 +4,8 @@
 
 Grounded assistant for internal operating manuals. A citation is copied from the retrieved passage, or the answer is refused.
 
+`POST /v1/answers` takes a question and a role (`operator` or `auditor`). A refusal is HTTP 200. Invalid input, a model that times out or returns the wrong shape, and a database that is down use `application/problem+json`.
+
 ## Tests
 
 GitHub Actions runs `pytest` against PostgreSQL 16 with pgvector, on pull requests and on pushes to `main`. The job installs no model client and uses no API key. Tests embed with a deterministic stand-in.
