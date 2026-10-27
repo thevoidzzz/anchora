@@ -3,7 +3,7 @@ name = "anchora"
 version = "0.0.0"
 description = "Grounded assistant for internal operating manuals"
 requires-python = ">=3.12"
-dependencies = ["psycopg[binary]>=3.2", "fastapi>=0.115"]
+dependencies = ["psycopg[binary]>=3.2", "fastapi>=0.115", "uvicorn>=0.32"]
 
 [project.optional-dependencies]
 dev = ["pytest>=8", "httpx2>=2"]
@@ -16,7 +16,7 @@ build-backend = "setuptools.build_meta"
 where = ["src"]
 
 [tool.setuptools.package-data]
-anchora = ["eval/golden.json", "eval/corpus/*.md"]
+anchora = ["eval/golden.json", "eval/corpus/*.md", "infrastructure/schema.sql"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

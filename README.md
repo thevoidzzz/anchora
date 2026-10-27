@@ -46,6 +46,18 @@ pip install -e ".[dev]"
 DATABASE_URL=postgresql://anchora@localhost:5432/anchora pytest
 ```
 
+The same suite runs in Docker. The image installs no model client and sets no API key. Compose does not publish the database port.
+
+```bash
+docker compose run --rm --build tests
+```
+
+The service listens on port 8000. On an empty catalog, `POST /v1/answers` with question `Meridian` and role `operator` is HTTP 200 and `no_evidence`.
+
+```bash
+docker compose up --build api
+```
+
 ## Contributing
 
 Open a pull request against `main`. The `test` check has to pass before merge.
