@@ -8,7 +8,7 @@ Grounded assistant for internal operating manuals. A citation is copied from the
 
 ## Evaluation
 
-`python -m anchora.eval` loads the bundled manuals and the 50 hand-written questions, then prints hit@5 and recall@5 apart from refusals. It also prints those two rates after reordering the five fused passages by tokens shared with the question. The answer still uses the fusion order. The database needs the `vector` extension.
+`python -m anchora.eval` loads the bundled manuals and the 50 hand-written questions, then prints hit@5 and recall@5 apart from refusals. It also prints those two rates after reordering the five fused passages by tokens shared with the question, and `supported_answers` for delivered drafts. The answer still uses the fusion order. The database needs the `vector` extension.
 
 ```bash
 DATABASE_URL=postgresql://anchora@localhost:5432/anchora python -m anchora.eval
@@ -57,6 +57,8 @@ generation_ms_p95: 0.004
 input_tokens: 250
 output_tokens: 50
 ```
+
+On 2026-11-09 the same command printed `supported_answers: 1.000`. A delivered draft counts when every digit-bearing token in it appears in a cited excerpt. The stand-in draft is `See the cited passages.`, which adds no code. A refusal stays outside that rate. This is not a comparison with people. The other figures of that run match the block above, except `retrieval_ms_p95: 5.472` and `generation_ms_p95: 0.005`.
 
 ## Tests
 

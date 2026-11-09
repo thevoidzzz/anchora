@@ -23,3 +23,4 @@ Son inmutables. Si una decisión cambia, un ADR nuevo la reemplaza. No se reescr
 | [0008](0008-public-corpus-is-english.md) | El corpus público está en inglés | Accepted |
 | [0009](0009-rerank-is-a-second-pass.md) | El rerank reordena los cinco y no sustituye la fusión | Accepted |
 | [0010](0010-no-similarity-floor.md) | No hay suelo de similitud | Accepted |
+| [0011](0011-support-checks-the-draft-code.md) | El apoyo mira el código del borrador, no un juez de pago | Accepted |

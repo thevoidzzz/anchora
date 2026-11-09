@@ -83,7 +83,7 @@ Cada respuesta lleva `request_id`. El log de una respuesta contestada o rechazad
 
 ## Qué no se esconde
 
-Esta versión no mide si la respuesta se sigue del pasaje. Mide si el pasaje correcto apareció y si la cita es texto real. Un modelo puede citar un trozo cercano y decir otra cosa. Ese hueco se cierra con un juez contrastado, en este mismo repositorio, cuando recall y validez de cita ya se imprimen. No antes: un juez sobre retrieval roto solo pone un número elegante.
+Esta versión mide si un código del borrador está en el extracto citado. No mide una paráfrasis ni un acuerdo con personas. [ADR-0011](../adr/0011-support-checks-the-draft-code.md). Un modelo puede citar un trozo cercano y decir otra cosa sin números: ese hueco sigue abierto.
 
 Tampoco hay umbral de similitud. Se midió la distancia coseno del vecino más cercano con el embedder fijo: las preguntas con evidencia y las nueve omisiones aparecen en 0 y en 1. Ningún corte separa los dos grupos. [ADR-0010](../adr/0010-no-similarity-floor.md). Las escalas léxica y vectorial no se suman. Si la fusión devuelve pasajes, el modelo los ve. El rechazo por “no hay nada” ocurre cuando la búsqueda no devuelve filas para ese rol, o cuando el modelo no elige un id permitido.
 
@@ -97,4 +97,4 @@ El codespace usa la imagen Linux por defecto y 2 núcleos. No hay prebuild. El R
 
 ## Versión siguiente, todavía no
 
-Juez de faithfulness, después de que recall y validez de cita se impriman. Un índice aproximado solo con latencia y hit@5 medidos. Un manual en español, con el diccionario `spanish` y las mismas métricas antes y después. Trazas, y un MCP cuando otro proceso llame a esta API. Interfaz web. AWS cuando el servicio ya corra en Docker, con el mismo contenedor y sin NAT gateway.
+Juez contrastado con personas. Un índice aproximado solo con latencia y hit@5 medidos. Un manual en español, con el diccionario `spanish` y las mismas métricas antes y después. Trazas, y un MCP cuando otro proceso llame a esta API. Interfaz web. AWS cuando el servicio ya corra en Docker, con el mismo contenedor y sin NAT gateway.

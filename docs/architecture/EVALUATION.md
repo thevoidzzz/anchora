@@ -33,7 +33,7 @@ Hit@5 y recall@5 se calculan sobre las preguntas que tienen evidencia para ese r
 
 ## Qué no se imprime todavía
 
-Faithfulness. Exige un juez y un contraste con personas. Hasta entonces, Anchora no afirma que la respuesta se desprenda del pasaje. Afirma que el pasaje está y que la cita es real.
+Un contraste con personas. `supported_answers` mira si un token con dígito del borrador está en el extracto citado. No afirma que una paráfrasis se desprenda del pasaje, ni un acuerdo con lectores. [ADR-0011](../adr/0011-support-checks-the-draft-code.md).
 
 Latencia p95 y el total de tokens salen del log de la corrida de evaluación, no de una sola llamada manual. Esta versión no imprime un importe.
 
