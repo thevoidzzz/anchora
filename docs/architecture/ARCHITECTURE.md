@@ -85,7 +85,7 @@ Cada respuesta lleva `request_id`. El log de una respuesta contestada o rechazad
 
 Esta versión no mide si la respuesta se sigue del pasaje. Mide si el pasaje correcto apareció y si la cita es texto real. Un modelo puede citar un trozo cercano y decir otra cosa. Ese hueco se cierra con un juez contrastado, en este mismo repositorio, cuando recall y validez de cita ya se imprimen. No antes: un juez sobre retrieval roto solo pone un número elegante.
 
-Tampoco hay umbral mágico de similitud. Las escalas léxica y vectorial no se suman. Si la fusión devuelve pasajes, el modelo los ve. El rechazo por “no hay nada” ocurre cuando la búsqueda no devuelve filas para ese rol, o cuando el modelo no elige un id permitido. Afinar un corte de score sin un conjunto medido sería un número inventado.
+Tampoco hay umbral de similitud. Se midió la distancia coseno del vecino más cercano con el embedder fijo: las preguntas con evidencia y las nueve omisiones aparecen en 0 y en 1. Ningún corte separa los dos grupos. [ADR-0010](../adr/0010-no-similarity-floor.md). Las escalas léxica y vectorial no se suman. Si la fusión devuelve pasajes, el modelo los ve. El rechazo por “no hay nada” ocurre cuando la búsqueda no devuelve filas para ese rol, o cuando el modelo no elige un id permitido.
 
 ## Idioma
 
