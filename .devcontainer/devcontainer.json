@@ -1,0 +1,10 @@
+{
+  "name": "Anchora",
+  "hostRequirements": {
+    "cpus": 2
+  },
+  "forwardPorts": [8000],
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:4": {}
+  }
+}

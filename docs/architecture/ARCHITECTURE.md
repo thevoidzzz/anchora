@@ -87,6 +87,10 @@ Tampoco hay umbral mágico de similitud. Las escalas léxica y vectorial no se s
 
 Los manuales, el README, la API, los tests y los commits de esta versión están en inglés. Esta arquitectura y los ADR están en español. La búsqueda léxica usa el diccionario `english`. [ADR-0008](../adr/0008-public-corpus-is-english.md).
 
+## Prueba
+
+El codespace usa la imagen Linux por defecto y 2 núcleos. No hay prebuild. El README levanta el mismo Compose: el sustituto, sin clave, y la base sin puerto publicado. Borrar el codespace apaga la prueba.
+
 ## Versión siguiente, todavía no
 
 Juez de faithfulness, después de que recall y validez de cita se impriman. Rerank comparado contra la fusión actual. Un índice aproximado solo con latencia y hit@5 medidos. Un manual en español, con el diccionario `spanish` y las mismas métricas antes y después. Trazas, y un MCP cuando otro proceso llame a esta API. Interfaz web. AWS cuando el servicio ya corra en Docker, con el mismo contenedor y sin NAT gateway.
