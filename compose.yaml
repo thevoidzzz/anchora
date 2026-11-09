@@ -18,7 +18,7 @@ services:
     environment:
       DATABASE_URL: postgresql://anchora@postgres:5432/anchora
     ports:
-      - "8000:8000"
+      - "${PUBLISH_PORT:-8000}:8000"
     depends_on:
       postgres:
         condition: service_healthy

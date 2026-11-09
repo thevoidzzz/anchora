@@ -66,6 +66,8 @@ Salida 200:
 
 No es un error que el manual no contenga la respuesta. El error es de transporte, de entrada o del proveedor.
 
+El proceso escucha en el 8000. Compose publica ese puerto en el host, o el valor de `PUBLISH_PORT` cuando el 8000 del host ya está ocupado. La base no se publica.
+
 Errores en `application/problem+json`:
 
 | Caso | Estado |
@@ -86,6 +88,10 @@ Tampoco hay umbral mágico de similitud. Las escalas léxica y vectorial no se s
 ## Idioma
 
 Los manuales, el README, la API, los tests y los commits de esta versión están en inglés. Esta arquitectura y los ADR están en español. La búsqueda léxica usa el diccionario `english`. [ADR-0008](../adr/0008-public-corpus-is-english.md).
+
+## Prueba
+
+El codespace usa la imagen Linux por defecto y 2 núcleos. No hay prebuild. El README levanta el mismo Compose: el sustituto, sin clave, y la base sin puerto publicado. Borrar el codespace apaga la prueba.
 
 ## Versión siguiente, todavía no
 

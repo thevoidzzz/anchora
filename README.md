@@ -58,6 +58,26 @@ The service listens on port 8000. On an empty catalog, `POST /v1/answers` with q
 docker compose up --build api
 ```
 
+## Try it
+
+Create a codespace on the 2-core machine. It uses the default image. Delete the codespace when you finish.
+
+```bash
+docker compose up --build --detach --wait api
+curl --retry 5 --retry-connrefused --retry-delay 1 -s -X POST localhost:8000/v1/answers \
+  -H 'content-type: application/json' \
+  -d '{"question":"Meridian","role":"operator"}'
+docker compose down
+```
+
+On an empty catalog the response is HTTP 200 and `no_evidence`.
+
+Set `PUBLISH_PORT` when another process is already listening on 8000. The database stays unpublished.
+
+```bash
+PUBLISH_PORT=8001 docker compose up --build --detach api
+```
+
 ## Contributing
 
 Open a pull request against `main`. The `test` check has to pass before merge.
