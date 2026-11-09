@@ -14,7 +14,7 @@ Grounded assistant for internal operating manuals. A citation is copied from the
 DATABASE_URL=postgresql://anchora@localhost:5432/anchora python -m anchora.eval
 ```
 
-Run on 2026-10-27 with embedding model `fixed-embedder` version 1 and language model `citing-stand-in`. This is that stand-in, not a hosted model. `fixed-embedder` does not encode meaning, and a question with no passage for the role can still be answered when the role can see other passages: this version has no similarity cutoff, so those nine refusals are missed.
+Run on 2026-10-27 with embedding model `fixed-embedder` version 1 and language model `citing-stand-in`. This is that stand-in, not a hosted model. `fixed-embedder` does not encode meaning, and a question with no passage for the role can still be answered when the role can see other passages. A cosine cutoff on that embedder does not separate those nine missed refusals from the evidence questions, so this version still has no similarity floor.
 
 ```
 embedding_model: fixed-embedder
