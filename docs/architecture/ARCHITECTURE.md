@@ -66,6 +66,8 @@ Salida 200:
 
 No es un error que el manual no contenga la respuesta. El error es de transporte, de entrada o del proveedor.
 
+El proceso escucha en el 8000. Compose publica ese puerto en el host, o el valor de `PUBLISH_PORT` cuando el 8000 del host ya está ocupado. La base no se publica.
+
 Errores en `application/problem+json`:
 
 | Caso | Estado |

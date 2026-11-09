@@ -72,6 +72,12 @@ docker compose down
 
 On an empty catalog the response is HTTP 200 and `no_evidence`.
 
+Set `PUBLISH_PORT` when another process is already listening on 8000. The database stays unpublished.
+
+```bash
+PUBLISH_PORT=8001 docker compose up --build --detach api
+```
+
 ## Contributing
 
 Open a pull request against `main`. The `test` check has to pass before merge.

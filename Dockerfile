@@ -12,6 +12,7 @@ ENTRYPOINT ["python", "-m", "anchora.api"]
 FROM runtime AS tests
 COPY tests ./tests
 COPY .devcontainer ./.devcontainer
+COPY compose.yaml ./
 RUN pip install --no-cache-dir ".[dev]" && rm -rf src
 ENTRYPOINT ["pytest"]
 CMD ["-q"]
