@@ -42,6 +42,8 @@ El modelo no escribe la cita. Elige identificadores. El servidor copia el extrac
 
 El orden de las citas es el de los ids del modelo. Un id repetido se publica una vez, en su primera aparición. El extracto es el texto completo de la ventana recuperada. Un id repetido dentro de lo recuperado es un error de la búsqueda, no una cita doble. El rechazo porque la búsqueda no devolvió filas es otro (`no_evidence`) y ocurre antes de llamar al modelo.
 
+La evaluación reordena esos cinco por los tokens que comparten con la pregunta e imprime hit@5 y recall@5 de la fusión y del rerank. El modelo sigue viendo el orden de la fusión. [ADR-0009](../adr/0009-rerank-is-a-second-pass.md).
+
 ## Módulos
 
 | Módulo | Puede importar | No puede |
@@ -95,4 +97,4 @@ El codespace usa la imagen Linux por defecto y 2 núcleos. No hay prebuild. El R
 
 ## Versión siguiente, todavía no
 
-Juez de faithfulness, después de que recall y validez de cita se impriman. Rerank comparado contra la fusión actual. Un índice aproximado solo con latencia y hit@5 medidos. Un manual en español, con el diccionario `spanish` y las mismas métricas antes y después. Trazas, y un MCP cuando otro proceso llame a esta API. Interfaz web. AWS cuando el servicio ya corra en Docker, con el mismo contenedor y sin NAT gateway.
+Juez de faithfulness, después de que recall y validez de cita se impriman. Un índice aproximado solo con latencia y hit@5 medidos. Un manual en español, con el diccionario `spanish` y las mismas métricas antes y después. Trazas, y un MCP cuando otro proceso llame a esta API. Interfaz web. AWS cuando el servicio ya corra en Docker, con el mismo contenedor y sin NAT gateway.

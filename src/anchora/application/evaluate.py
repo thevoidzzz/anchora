@@ -7,6 +7,7 @@ from anchora.application.ingest import ingest_manual
 from anchora.application.ports import DocumentCatalog, Embedder, LanguageModel
 from anchora.application.search import retrieve
 from anchora.domain.errors import EvalError
+from anchora.domain.rerank import rerank_passages
 from anchora.domain.scoring import EvalItem, EvalReport, QuestionOutcome, score_run, section_id
 
 _ROLES = frozenset({"operator", "auditor"})
@@ -52,12 +53,16 @@ def evaluate(
     language_model = "-"
     for item in items:
         passages = retrieve(item.question, item.role, catalog, embedder)
+        reranked = rerank_passages(item.question, passages)
         answer = answer_question(item.question, item.role, catalog, embedder, model)
         outcomes.append(
             QuestionOutcome(
                 item=item,
                 retrieved_sections=tuple(section_id(passage.document_id, passage.section_path) for passage in passages),
                 refused=answer.refused,
+                reranked_sections=tuple(
+                    section_id(passage.document_id, passage.section_path) for passage in reranked
+                ),
             )
         )
         for citation in answer.citations:

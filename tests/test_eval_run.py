@@ -58,6 +58,8 @@ def test_the_report_keeps_an_exact_term_and_hides_the_other_role(
     assert "evidence_questions: 41\n" in printed
     assert "hit_at_5: 0.951\n" in printed
     assert "recall_at_5: 0.956\n" in printed
+    assert "rerank_hit_at_5: 0.951\n" in printed
+    assert "rerank_recall_at_5: 0.956\n" in printed
     assert "citation_validity: 1.000\n" in printed
     assert "correct_refusals: 0\n" in printed
     assert "false_refusals: 0\n" in printed

@@ -100,5 +100,7 @@ def test_the_report_names_the_embedding_model() -> None:
     assert "embedding_model: fixed-embedder\n" in text
     assert "embedding_version: 1\n" in text
     assert "hit_at_5: n/a\n" in text
+    assert "rerank_hit_at_5: n/a\n" in text
+    assert "rerank_recall_at_5: n/a\n" in text
     assert "citation_validity: n/a\n" in text
     assert "retrieval_ms_p95: 5.000\n" in text
