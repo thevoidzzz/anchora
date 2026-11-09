@@ -26,6 +26,7 @@ class QuestionOutcome:
     retrieved_sections: tuple[str, ...]
     refused: bool
     reranked_sections: tuple[str, ...] | None = None
+    supported: bool | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -42,6 +43,7 @@ class EvalReport:
     rerank_hit_at_5: float | None
     rerank_recall_at_5: float | None
     citation_validity: float | None
+    supported_answers: float | None
     citations: int
     invalid_citations: int
     correct_refusals: int
@@ -106,6 +108,11 @@ def score_run(
     invalid = sum(1 for returned, stored in excerpts if returned != stored)
     citations = len(excerpts)
     validity = None if citations == 0 else (citations - invalid) / citations
+    delivered = [outcome for outcome in outcomes if not outcome.refused]
+    if delivered and all(outcome.supported is not None for outcome in delivered):
+        supported_answers = sum(1 for outcome in delivered if outcome.supported) / len(delivered)
+    else:
+        supported_answers = None
     return EvalReport(
         embedding_model=embedding_model,
         embedding_version=embedding_version,
@@ -117,6 +124,7 @@ def score_run(
         rerank_hit_at_5=rerank_hit_at_5,
         rerank_recall_at_5=rerank_recall_at_5,
         citation_validity=validity,
+        supported_answers=supported_answers,
         citations=citations,
         invalid_citations=invalid,
         correct_refusals=sum(1 for outcome in outcomes if outcome.item.expect_refusal and outcome.refused),
@@ -144,6 +152,7 @@ def format_report(report: EvalReport) -> str:
         f"rerank_hit_at_5: {_rate(report.rerank_hit_at_5)}",
         f"rerank_recall_at_5: {_rate(report.rerank_recall_at_5)}",
         f"citation_validity: {_rate(report.citation_validity)}",
+        f"supported_answers: {_rate(report.supported_answers)}",
         f"citations: {report.citations}",
         f"correct_refusals: {report.correct_refusals}",
         f"false_refusals: {report.false_refusals}",

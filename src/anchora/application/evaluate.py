@@ -9,6 +9,7 @@ from anchora.application.search import retrieve
 from anchora.domain.errors import EvalError
 from anchora.domain.rerank import rerank_passages
 from anchora.domain.scoring import EvalItem, EvalReport, QuestionOutcome, score_run, section_id
+from anchora.domain.support import draft_is_supported
 
 _ROLES = frozenset({"operator", "auditor"})
 
@@ -55,6 +56,9 @@ def evaluate(
         passages = retrieve(item.question, item.role, catalog, embedder)
         reranked = rerank_passages(item.question, passages)
         answer = answer_question(item.question, item.role, catalog, embedder, model)
+        supported = None
+        if not answer.refused and answer.answer is not None:
+            supported = draft_is_supported(answer.answer, tuple(citation.excerpt for citation in answer.citations))
         outcomes.append(
             QuestionOutcome(
                 item=item,
@@ -63,6 +67,7 @@ def evaluate(
                 reranked_sections=tuple(
                     section_id(passage.document_id, passage.section_path) for passage in reranked
                 ),
+                supported=supported,
             )
         )
         for citation in answer.citations:
