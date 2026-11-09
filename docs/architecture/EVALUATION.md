@@ -39,7 +39,7 @@ Latencia p95 y el total de tokens salen del log de la corrida de evaluación, no
 
 ## Antes y después
 
-La primera corrida guardada es léxico más vector sin rerank. El rerank, si entra, se compara contra esa corrida en el mismo conjunto. Sin la corrida previa, no hay mejora: hay un número suelto.
+La corrida de la fusión sigue impresa como hit@5 y recall@5. El mismo comando imprime `rerank_hit_at_5` y `rerank_recall_at_5` sobre esos cinco, reordenados por tokens compartidos con la pregunta. El modelo no cambia de lista. Sin las dos líneas, no hay comparación. [ADR-0009](../adr/0009-rerank-is-a-second-pass.md).
 
 ## Comando
 

@@ -25,6 +25,7 @@ class QuestionOutcome:
     item: EvalItem
     retrieved_sections: tuple[str, ...]
     refused: bool
+    reranked_sections: tuple[str, ...] | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -38,6 +39,8 @@ class EvalReport:
     evidence_questions: int
     hit_at_5: float | None
     recall_at_5: float | None
+    rerank_hit_at_5: float | None
+    rerank_recall_at_5: float | None
     citation_validity: float | None
     citations: int
     invalid_citations: int
@@ -94,9 +97,12 @@ def score_run(
         relevant_total = sum(len(set(outcome.item.relevant_sections)) for outcome in evidence)
         found_total = sum(len(_found_sections(outcome)) for outcome in evidence)
         recall_at_5 = found_total / relevant_total
+        rerank_hit_at_5, rerank_recall_at_5 = _rerank_rates(evidence, relevant_total)
     else:
         hit_at_5 = None
         recall_at_5 = None
+        rerank_hit_at_5 = None
+        rerank_recall_at_5 = None
     invalid = sum(1 for returned, stored in excerpts if returned != stored)
     citations = len(excerpts)
     validity = None if citations == 0 else (citations - invalid) / citations
@@ -108,6 +114,8 @@ def score_run(
         evidence_questions=len(evidence),
         hit_at_5=hit_at_5,
         recall_at_5=recall_at_5,
+        rerank_hit_at_5=rerank_hit_at_5,
+        rerank_recall_at_5=rerank_recall_at_5,
         citation_validity=validity,
         citations=citations,
         invalid_citations=invalid,
@@ -133,6 +141,8 @@ def format_report(report: EvalReport) -> str:
         f"evidence_questions: {report.evidence_questions}",
         f"hit_at_5: {_rate(report.hit_at_5)}",
         f"recall_at_5: {_rate(report.recall_at_5)}",
+        f"rerank_hit_at_5: {_rate(report.rerank_hit_at_5)}",
+        f"rerank_recall_at_5: {_rate(report.rerank_recall_at_5)}",
         f"citation_validity: {_rate(report.citation_validity)}",
         f"citations: {report.citations}",
         f"correct_refusals: {report.correct_refusals}",
@@ -151,7 +161,24 @@ def _found(outcome: QuestionOutcome) -> bool:
 
 
 def _found_sections(outcome: QuestionOutcome) -> set[str]:
-    return set(outcome.retrieved_sections[:TOP_K]) & set(outcome.item.relevant_sections)
+    return _overlap(outcome.retrieved_sections, outcome.item.relevant_sections)
+
+
+def _rerank_rates(
+    evidence: Sequence[QuestionOutcome],
+    relevant_total: int,
+) -> tuple[float | None, float | None]:
+    if any(outcome.reranked_sections is None for outcome in evidence):
+        return None, None
+    hits = sum(1 for outcome in evidence if _overlap(outcome.reranked_sections, outcome.item.relevant_sections))
+    found_total = sum(len(_overlap(outcome.reranked_sections, outcome.item.relevant_sections)) for outcome in evidence)
+    return hits / len(evidence), found_total / relevant_total
+
+
+def _overlap(sections: tuple[str, ...] | None, relevant: tuple[str, ...]) -> set[str]:
+    if sections is None:
+        return set()
+    return set(sections[:TOP_K]) & set(relevant)
 
 
 def _rate(value: float | None) -> str:

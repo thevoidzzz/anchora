@@ -8,7 +8,7 @@ Grounded assistant for internal operating manuals. A citation is copied from the
 
 ## Evaluation
 
-`python -m anchora.eval` loads the bundled manuals and the 50 hand-written questions, then prints hit@5 and recall@5 apart from refusals. The database needs the `vector` extension.
+`python -m anchora.eval` loads the bundled manuals and the 50 hand-written questions, then prints hit@5 and recall@5 apart from refusals. It also prints those two rates after reordering the five fused passages by tokens shared with the question. The answer still uses the fusion order. The database needs the `vector` extension.
 
 ```bash
 DATABASE_URL=postgresql://anchora@localhost:5432/anchora python -m anchora.eval
@@ -31,6 +31,29 @@ false_refusals: 0
 missed_refusals: 9
 retrieval_ms_p95: 20.802
 generation_ms_p95: 0.010
+input_tokens: 250
+output_tokens: 50
+```
+
+On 2026-11-09 the same command printed the fusion rates again and the reorder of those five passages. Hit@5 and recall@5 stayed on the fusion figures. The model still receives the fusion order.
+
+```
+embedding_model: fixed-embedder
+embedding_version: 1
+language_model: citing-stand-in
+questions: 50
+evidence_questions: 41
+hit_at_5: 0.951
+recall_at_5: 0.956
+rerank_hit_at_5: 0.951
+rerank_recall_at_5: 0.956
+citation_validity: 1.000
+citations: 250
+correct_refusals: 0
+false_refusals: 0
+missed_refusals: 9
+retrieval_ms_p95: 4.891
+generation_ms_p95: 0.004
 input_tokens: 250
 output_tokens: 50
 ```

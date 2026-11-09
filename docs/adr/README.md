@@ -21,3 +21,4 @@ Son inmutables. Si una decisión cambia, un ADR nuevo la reemplaza. No se reescr
 | [0006](0006-stable-chunk-identity.md) | El id del trozo sale del documento, la sección y el ordinal | Accepted |
 | [0007](0007-role-is-a-claim-until-there-is-identity.md) | El rol de esta versión es una declaración, no una identidad | Accepted |
 | [0008](0008-public-corpus-is-english.md) | El corpus público está en inglés | Accepted |
+| [0009](0009-rerank-is-a-second-pass.md) | El rerank reordena los cinco y no sustituye la fusión | Accepted |
