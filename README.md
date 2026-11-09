@@ -97,6 +97,18 @@ docker compose down
 
 On an empty catalog the response is HTTP 200 and `no_evidence`.
 
+Load the bundled manuals into that database. The command replaces the catalog. `JE-4419` as `operator` cites the section `Book accruals`. The same question as `auditor` does not cite that manual.
+
+```bash
+docker compose exec api python -m anchora.sample
+curl -s -X POST localhost:8000/v1/answers \
+  -H 'content-type: application/json' \
+  -d '{"question":"JE-4419","role":"operator"}'
+curl -s -X POST localhost:8000/v1/answers \
+  -H 'content-type: application/json' \
+  -d '{"question":"JE-4419","role":"auditor"}'
+```
+
 Set `PUBLISH_PORT` when another process is already listening on 8000. The database stays unpublished.
 
 ```bash

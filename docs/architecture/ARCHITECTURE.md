@@ -93,7 +93,7 @@ Los manuales, el README, la API, los tests y los commits de esta versión están
 
 ## Prueba
 
-El codespace usa la imagen Linux por defecto y 2 núcleos. No hay prebuild. El README levanta el mismo Compose: el sustituto, sin clave, y la base sin puerto publicado. Borrar el codespace apaga la prueba.
+El codespace usa la imagen Linux por defecto y 2 núcleos. No hay prebuild. El README levanta el mismo Compose: el sustituto, sin clave, y la base sin puerto publicado. Un comando carga los manuales del conjunto y sustituye el catálogo de esa base. Sin ese comando el catálogo sigue vacío. Borrar el codespace apaga la prueba.
 
 ## Versión siguiente, todavía no
 

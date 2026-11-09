@@ -23,6 +23,10 @@ def test_the_readme_try_asks_the_empty_catalog() -> None:
     assert "docker compose up --build --detach --wait api" in readme
     assert "localhost:8000/v1/answers" in readme
     assert '{"question":"Meridian","role":"operator"}' in readme
+    assert "python -m anchora.sample" in readme
+    assert '{"question":"JE-4419","role":"operator"}' in readme
+    assert '{"question":"JE-4419","role":"auditor"}' in readme
+    assert "Book accruals" in readme
     assert "docker compose down" in readme
     assert "no_evidence" in readme
     lowered = readme.lower()
