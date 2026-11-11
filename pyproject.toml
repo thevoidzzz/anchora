@@ -16,7 +16,7 @@ build-backend = "setuptools.build_meta"
 where = ["src"]
 
 [tool.setuptools.package-data]
-anchora = ["eval/golden.json", "eval/corpus/*.md", "eval/spanish_corpus/*.md", "infrastructure/schema.sql"]
+anchora = ["eval/golden.json", "eval/corpus/*.md", "eval/spanish/*.md", "infrastructure/schema.sql"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
