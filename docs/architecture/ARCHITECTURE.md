@@ -85,7 +85,7 @@ Cada respuesta lleva `request_id`. El log de una respuesta contestada o rechazad
 
 Esta versión mide si un código del borrador está en el extracto citado. No mide una paráfrasis ni un acuerdo con personas. [ADR-0011](../adr/0011-support-checks-the-draft-code.md). Un modelo puede citar un trozo cercano y decir otra cosa sin números: ese hueco sigue abierto.
 
-Tampoco hay umbral de similitud. Se midió la distancia coseno del vecino más cercano con el embedder fijo: las preguntas con evidencia y las nueve omisiones aparecen en 0 y en 1. Ningún corte separa los dos grupos. [ADR-0010](../adr/0010-no-similarity-floor.md). Las escalas léxica y vectorial no se suman. Si la fusión devuelve pasajes, el modelo los ve. El rechazo por “no hay nada” ocurre cuando la búsqueda no devuelve filas para ese rol, o cuando el modelo no elige un id permitido. El 2026-11-11 esa misma corrida imprimió `retrieval_ms_p95` 11.930 y hit@5 0.951. El scan sigue exacto. [ADR-0013](../adr/0013-measured-latency-keeps-exact-search.md).
+Tampoco hay umbral de similitud. Se midió la distancia coseno del vecino más cercano con el embedder fijo: las preguntas con evidencia y las nueve omisiones aparecen en 0 y en 1. Ningún corte separa los dos grupos. [ADR-0010](../adr/0010-no-similarity-floor.md). Las escalas léxica y vectorial no se suman. Si la fusión devuelve pasajes, el modelo los ve. El rechazo por “no hay nada” ocurre cuando la búsqueda no devuelve filas para ese rol, o cuando el modelo no elige un id permitido. El 2026-11-11 esa misma corrida imprimió `retrieval_ms_p95` 11.034 y hit@5 0.951. El scan sigue exacto. [ADR-0013](../adr/0013-measured-latency-keeps-exact-search.md).
 
 ## Idioma
 

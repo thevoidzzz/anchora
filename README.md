@@ -75,7 +75,7 @@ spanish_hit_at_5: 1.000
 spanish_recall_at_5: 1.000
 ```
 
-On 2026-11-11 `python -m anchora.eval` printed `retrieval_ms_p95: 11.930` and `hit_at_5: 0.951`. That is milliseconds on this corpus. Vector search stays an exact scan. No approximate index was added.
+On 2026-11-11 `python -m anchora.eval` printed `retrieval_ms_p95: 11.034` and `hit_at_5: 0.951`. That is milliseconds on this corpus. Vector search stays an exact scan. No approximate index was added.
 
 ```
 embedding_model: fixed-embedder
@@ -93,8 +93,8 @@ citations: 250
 correct_refusals: 0
 false_refusals: 0
 missed_refusals: 9
-retrieval_ms_p95: 11.930
-generation_ms_p95: 0.008
+retrieval_ms_p95: 11.034
+generation_ms_p95: 0.010
 input_tokens: 250
 output_tokens: 50
 ```
