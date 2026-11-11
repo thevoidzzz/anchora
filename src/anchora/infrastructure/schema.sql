@@ -17,7 +17,8 @@ CREATE TABLE IF NOT EXISTS chunks (
     embedding_model text NOT NULL,
     embedding_version text NOT NULL,
     embedding vector NOT NULL,
-    search_vector tsvector GENERATED ALWAYS AS (to_tsvector('english', body)) STORED,
+    lexicon text NOT NULL CHECK (lexicon IN ('english', 'spanish')),
+    search_vector tsvector NOT NULL,
     UNIQUE (document_id, section_path, ordinal)
 );
 

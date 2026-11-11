@@ -12,7 +12,7 @@ from psycopg.rows import dict_row
 
 from anchora.domain.embedding import EmbeddingIdentity
 from anchora.domain.errors import CatalogUnavailable, IngestError, SearchError
-from anchora.domain.manual import Audience, Chunk, Role
+from anchora.domain.manual import Audience, Chunk, Lexicon, Role
 
 _SCHEMA = Path(__file__).with_name("schema.sql").read_text(encoding="utf-8")
 
@@ -26,7 +26,11 @@ class PostgresCatalog:
     def ensure_schema(self) -> None:
         with self._connection() as conn:
             conn.execute("CREATE EXTENSION IF NOT EXISTS vector")
-            if _chunks_lack_embedding(conn):
+            if (
+                _chunks_lack_column(conn, "embedding")
+                or _chunks_lack_column(conn, "lexicon")
+                or _search_vector_is_generated(conn)
+            ):
                 conn.execute("DROP TABLE IF EXISTS chunks")
                 conn.execute("DROP TABLE IF EXISTS documents")
             conn.execute(_SCHEMA)
@@ -51,6 +55,9 @@ class PostgresCatalog:
             for chunk in chunks
         ):
             raise IngestError("a save covers one document")
+        lexicon = chunks[0].lexicon
+        if any(chunk.lexicon != lexicon for chunk in chunks):
+            raise IngestError("a save covers one lexicon")
         if len(embeddings) != len(chunks):
             raise IngestError("each chunk needs one embedding")
         vectors = [_vector_literal(vector, identity.dimensions) for vector in embeddings]
@@ -67,6 +74,9 @@ class PostgresCatalog:
                 identity.name,
                 identity.version,
                 vector,
+                chunk.lexicon,
+                chunk.lexicon,
+                chunk.text,
             )
             for chunk, vector in zip(chunks, vectors, strict=True)
         ]
@@ -92,9 +102,12 @@ class PostgresCatalog:
                 """
                 INSERT INTO chunks (
                     chunk_id, document_id, section_path, ordinal, page, body, content_hash,
-                    embedding_model, embedding_version, embedding
+                    embedding_model, embedding_version, embedding, lexicon, search_vector
                 )
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s::vector)
+                VALUES (
+                    %s, %s, %s, %s, %s, %s, %s,
+                    %s, %s, %s::vector, %s, to_tsvector(%s::regconfig, %s)
+                )
                 ON CONFLICT (chunk_id) DO UPDATE
                 SET section_path = EXCLUDED.section_path,
                     ordinal = EXCLUDED.ordinal,
@@ -103,7 +116,9 @@ class PostgresCatalog:
                     content_hash = EXCLUDED.content_hash,
                     embedding_model = EXCLUDED.embedding_model,
                     embedding_version = EXCLUDED.embedding_version,
-                    embedding = EXCLUDED.embedding
+                    embedding = EXCLUDED.embedding,
+                    lexicon = EXCLUDED.lexicon,
+                    search_vector = EXCLUDED.search_vector
                 """,
                 rows,
             )
@@ -125,7 +140,7 @@ class PostgresCatalog:
             row = conn.execute(
                 """
                 SELECT c.chunk_id, c.document_id, d.title, d.audience,
-                       c.section_path, c.ordinal, c.page, c.body
+                       c.section_path, c.ordinal, c.page, c.body, c.lexicon
                 FROM chunks c
                 JOIN documents d ON d.document_id = c.document_id
                 WHERE c.chunk_id = %s
@@ -141,12 +156,14 @@ class PostgresCatalog:
             rows = conn.execute(
                 """
                 SELECT c.chunk_id, c.document_id, d.title, d.audience,
-                       c.section_path, c.ordinal, c.page, c.body
+                       c.section_path, c.ordinal, c.page, c.body, c.lexicon
                 FROM chunks c
                 JOIN documents d ON d.document_id = c.document_id
-                WHERE c.search_vector @@ plainto_tsquery('english', %s)
+                WHERE c.search_vector @@ plainto_tsquery(c.lexicon::regconfig, %s)
                   AND d.audience IN (%s, 'both')
-                ORDER BY ts_rank(c.search_vector, plainto_tsquery('english', %s)) DESC,
+                ORDER BY ts_rank(
+                    c.search_vector, plainto_tsquery(c.lexicon::regconfig, %s)
+                ) DESC,
                          c.chunk_id
                 """,
                 (term, role, term),
@@ -171,7 +188,7 @@ class PostgresCatalog:
             rows = conn.execute(
                 """
                 SELECT c.chunk_id, c.document_id, d.title, d.audience,
-                       c.section_path, c.ordinal, c.page, c.body
+                       c.section_path, c.ordinal, c.page, c.body, c.lexicon
                 FROM chunks c
                 JOIN documents d ON d.document_id = c.document_id
                 WHERE d.audience IN (%s, 'both')
@@ -192,7 +209,28 @@ class PostgresCatalog:
             raise CatalogUnavailable("the catalog is unavailable") from exc
 
 
-def _chunks_lack_embedding(conn: psycopg.Connection) -> bool:
+def _search_vector_is_generated(conn: psycopg.Connection) -> bool:
+    """A generated vector cannot take the row's own dictionary."""
+
+    row = conn.execute(
+        """
+        SELECT EXISTS (
+            SELECT 1
+            FROM pg_attribute a
+            JOIN pg_class c ON c.oid = a.attrelid
+            JOIN pg_namespace n ON n.oid = c.relnamespace
+            WHERE n.nspname = 'public'
+              AND c.relname = 'chunks'
+              AND a.attname = 'search_vector'
+              AND NOT a.attisdropped
+              AND a.attgenerated <> ''
+        )
+        """
+    ).fetchone()
+    return bool(row and row[0])
+
+
+def _chunks_lack_column(conn: psycopg.Connection, column: str) -> bool:
     row = conn.execute(
         """
         SELECT EXISTS (
@@ -200,9 +238,12 @@ def _chunks_lack_embedding(conn: psycopg.Connection) -> bool:
             WHERE table_schema = 'public' AND table_name = 'chunks'
         ) AND NOT EXISTS (
             SELECT 1 FROM information_schema.columns
-            WHERE table_schema = 'public' AND table_name = 'chunks' AND column_name = 'embedding'
+            WHERE table_schema = 'public'
+              AND table_name = 'chunks'
+              AND column_name = %s
         )
-        """
+        """,
+        (column,),
     ).fetchone()
     return bool(row and row[0])
 
@@ -250,4 +291,5 @@ def _chunk(row: dict[str, object]) -> Chunk:
         ordinal=int(str(row["ordinal"])),
         page=int(str(row["page"])),
         text=str(row["body"]),
+        lexicon=cast(Lexicon, row["lexicon"]),
     )
