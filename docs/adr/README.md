@@ -25,3 +25,4 @@ Son inmutables. Si una decisión cambia, un ADR nuevo la reemplaza. No se reescr
 | [0010](0010-no-similarity-floor.md) | No hay suelo de similitud | Accepted |
 | [0011](0011-support-checks-the-draft-code.md) | El apoyo mira el código del borrador, no un juez de pago | Accepted |
 | [0012](0012-spanish-manual-is-a-separate-run.md) | El manual en español se mide aparte | Accepted |
+| [0013](0013-measured-latency-keeps-exact-search.md) | La latencia medida no pide un índice aproximado | Accepted |
