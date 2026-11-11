@@ -8,6 +8,7 @@ from anchora.domain.errors import ChunkConfigError, ManualError
 
 Audience = Literal["operator", "auditor", "both"]
 Role = Literal["operator", "auditor"]
+Lexicon = Literal["english", "spanish"]
 
 DEFAULT_MAX_CHARS = 1500
 DEFAULT_OVERLAP_CHARS = 200
@@ -17,7 +18,9 @@ _SECTION_HEADING_RE = re.compile(r"^(#{2,3})[ \t]+(.*\S)[ \t]*$")
 _ANY_HEADING_RE = re.compile(r"^#{1,6}(?:[ \t]|$)")
 _PAGE_RE = re.compile(r"^page:[ \t]*([1-9][0-9]*)[ \t]*$")
 _FRONTMATTER_KEYS = ("id", "title", "audience")
+_OPTIONAL_FRONTMATTER = frozenset({"lexicon"})
 _AUDIENCES = frozenset({"operator", "auditor", "both"})
+_LEXICONS = frozenset({"english", "spanish"})
 
 
 @dataclass(frozen=True, slots=True)
@@ -46,6 +49,7 @@ class Chunk:
     ordinal: int
     page: int
     text: str
+    lexicon: Lexicon = "english"
 
 
 @dataclass(frozen=True, slots=True)
@@ -53,6 +57,7 @@ class _Manual:
     document_id: str
     title: str
     audience: Audience
+    lexicon: Lexicon
 
 
 @dataclass(frozen=True, slots=True)
@@ -103,7 +108,7 @@ def _parse_frontmatter(raw: str) -> _Manual:
         key, value = line.split(":", 1)
         key = key.strip()
         value = value.strip()
-        if key not in _FRONTMATTER_KEYS:
+        if key not in _FRONTMATTER_KEYS and key not in _OPTIONAL_FRONTMATTER:
             raise ManualError(f"unknown frontmatter field: {key}")
         if key in found:
             raise ManualError(f"duplicate frontmatter field: {key}")
@@ -119,7 +124,15 @@ def _parse_frontmatter(raw: str) -> _Manual:
     audience = found["audience"]
     if audience not in _AUDIENCES:
         raise ManualError("audience must be operator, auditor, or both")
-    return _Manual(document_id=document_id, title=found["title"], audience=cast(Audience, audience))
+    lexicon = found.get("lexicon", "english")
+    if lexicon not in _LEXICONS:
+        raise ManualError("lexicon must be english or spanish")
+    return _Manual(
+        document_id=document_id,
+        title=found["title"],
+        audience=cast(Audience, audience),
+        lexicon=cast(Lexicon, lexicon),
+    )
 
 
 def _parse_sections(body: str) -> tuple[_Section, ...]:
@@ -193,6 +206,7 @@ def _chunks_for_section(manual: _Manual, section: _Section, config: ChunkConfig)
             ordinal=ordinal,
             page=section.page,
             text=piece,
+            lexicon=manual.lexicon,
         )
         for ordinal, piece in enumerate(_windows(section.text, config))
     )

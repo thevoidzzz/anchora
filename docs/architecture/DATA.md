@@ -7,7 +7,7 @@ Fecha: 2026-10-23
 
 El corpus de esta versión son manuales sintéticos en inglés, de operación financiera: cierre, matriz de aprobación, límites. No son documentos de un empleador. El README, los mensajes de la API, los tests y los commits van en inglés. Estos documentos van en español. [ADR-0008](../adr/0008-public-corpus-is-english.md).
 
-Cada archivo es Markdown y abre con tres campos: `id` (slug en minúsculas), `title` y `audience` (`operator`, `auditor` o `both`). La audiencia es del archivo entero. Un campo desconocido, repetido o vacío no se lee.
+Cada archivo es Markdown y abre con tres campos: `id` (slug en minúsculas), `title` y `audience` (`operator`, `auditor` o `both`). `lexicon` es opcional: `english` o `spanish`. Si falta, el trozo queda en `english`. La audiencia es del archivo entero. Un campo desconocido, repetido o vacío no se lee.
 
 Una sección empieza en un `##` en la columna cero. Un `###` cuelga del `##` anterior y su ruta es `Encabezado / Subencabezado`. Otro nivel de encabezado es un error. Antes del primer `##` no hay texto. La primera línea no vacía de la sección es `page: N`, con N entero a partir de 1: es la página que el autor escribió, no un cálculo de PDF. Una sección sin página, sin texto, o con una ruta repetida en el mismo archivo, no se trocea. El encabezado se guarda con los espacios extremos recortados y los internos colapsados. La ruta conserva ese texto, mayúsculas incluidas. No se convierte en slug.
 
@@ -25,7 +25,7 @@ Cada fila guarda el modelo de embedding con nombre y versión. Una ingesta que m
 
 ## Búsqueda
 
-Dos consultas, las dos con `WHERE` de audiencia del rol, y luego fusión por reciprocal rank fusion. `k` es 60, el rank empieza en 1, y el score de un trozo es la suma de `1/(k+rank)` sobre las listas en las que aparece. La configuración de `tsvector` de esta versión es `english`. [ADR-0008](../adr/0008-public-corpus-is-english.md). No se suman el score de `tsvector` y la distancia del vector: no viven en la misma escala. [ADR-0002](../adr/0002-role-filter-before-the-model.md). [ADR-0003](../adr/0003-reciprocal-rank-fusion.md). La evaluación reordena esos cinco contando tokens compartidos con la pregunta. Ese orden no es el que recibe el modelo. [ADR-0009](../adr/0009-rerank-is-a-second-pass.md).
+Dos consultas, las dos con `WHERE` de audiencia del rol, y luego fusión por reciprocal rank fusion. `k` es 60, el rank empieza en 1, y el score de un trozo es la suma de `1/(k+rank)` sobre las listas en las que aparece. El `tsvector` usa el `lexicon` de la fila. El corpus publicado no lo declara, así que sigue en `english`. Un manual en español se mide con otro comando y no entra en ese conjunto. [ADR-0008](../adr/0008-public-corpus-is-english.md). [ADR-0012](../adr/0012-spanish-manual-is-a-separate-run.md). No se suman el score de `tsvector` y la distancia del vector: no viven en la misma escala. [ADR-0002](../adr/0002-role-filter-before-the-model.md). [ADR-0003](../adr/0003-reciprocal-rank-fusion.md). La evaluación reordena esos cinco contando tokens compartidos con la pregunta. Ese orden no es el que recibe el modelo. [ADR-0009](../adr/0009-rerank-is-a-second-pass.md).
 
 La búsqueda vectorial de esta versión es exacta, `ORDER BY` distancia coseno (`<=>`), sin umbral de similitud. El corpus de demostración no justifica un índice aproximado: la migración no crea HNSW ni IVFFlat. Un índice aproximado entra cuando una medición de latencia lo pida, con un ADR nuevo. [ADR-0004](../adr/0004-exact-vector-search-until-measured.md).
 

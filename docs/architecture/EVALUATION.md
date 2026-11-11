@@ -41,6 +41,8 @@ Latencia p95 y el total de tokens salen del log de la corrida de evaluación, no
 
 La corrida de la fusión sigue impresa como hit@5 y recall@5. El mismo comando imprime `rerank_hit_at_5` y `rerank_recall_at_5` sobre esos cinco, reordenados por tokens compartidos con la pregunta. El modelo no cambia de lista. Sin las dos líneas, no hay comparación. [ADR-0009](../adr/0009-rerank-is-a-second-pass.md).
 
+`python -m anchora.eval.spanish` no carga las cincuenta. Carga un manual, `lote`, lo guarda una vez con `english` y otra con `spanish`, y imprime hit@5 y recall@5 de cada diccionario. El troceo es el mismo. Cinco manuales de relleno quedan más cerca en el espacio del embedder fijo, así que un fallo léxico sale de los cinco fusionados. Esos números no sustituyen la línea de base inglesa. [ADR-0012](../adr/0012-spanish-manual-is-a-separate-run.md).
+
 ## Comando
 
 El informe separa hit@5 y recall@5 de los rechazos. Hit@5 y recall@5 usan solo las preguntas con evidencia: el recall es micro, las secciones distintas presentes en los cinco primeros trozos sobre las secciones relevantes. Un trozo de más no cuenta. Los rechazos correctos, los indebidos (se rechazó una pregunta con evidencia) y los omitidos (se contestó una pregunta que debía rechazarse) van en líneas distintas. La validez de cita es la fracción de extractos idénticos al trozo guardado; si hay citas y no es 1, el comando termina con error. El informe nombra el modelo de embedding y el modelo de lenguaje. Imprime latencia p95 y tokens. No imprime un importe: esta versión no tiene una tarifa.

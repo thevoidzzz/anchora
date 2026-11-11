@@ -60,6 +60,21 @@ output_tokens: 50
 
 On 2026-11-09 the same command printed `supported_answers: 1.000`. A delivered draft counts when every digit-bearing token in it appears in a cited excerpt. The stand-in draft is `See the cited passages.`, which adds no code. A refusal stays outside that rate. This is not a comparison with people. The other figures of that run match the block above, except `retrieval_ms_p95: 5.472` and `generation_ms_p95: 0.005`.
 
+`python -m anchora.eval.spanish` does not load those 50 questions. On 2026-11-11 it scored one manual, `lote`, once with the `english` dictionary and once with `spanish`. Chunking stayed the same. Five filler manuals sit closer in the fixed embedder, so a lexical miss falls outside the five fused passages. These four rates do not replace the English baseline.
+
+```bash
+DATABASE_URL=postgresql://anchora@localhost:5432/anchora python -m anchora.eval.spanish
+```
+
+```
+manual: lote
+questions: 1
+english_hit_at_5: 0.000
+english_recall_at_5: 0.000
+spanish_hit_at_5: 1.000
+spanish_recall_at_5: 1.000
+```
+
 ## Tests
 
 GitHub Actions runs `pytest` against PostgreSQL 16 with pgvector, on pull requests and on pushes to `main`. The job installs no model client and uses no API key. Tests embed with a deterministic stand-in.

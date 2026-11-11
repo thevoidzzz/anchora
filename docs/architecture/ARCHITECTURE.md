@@ -89,7 +89,7 @@ Tampoco hay umbral de similitud. Se midió la distancia coseno del vecino más c
 
 ## Idioma
 
-Los manuales, el README, la API, los tests y los commits de esta versión están en inglés. Esta arquitectura y los ADR están en español. La búsqueda léxica usa el diccionario `english`. [ADR-0008](../adr/0008-public-corpus-is-english.md).
+Los manuales del conjunto publicado, el README, la API, los tests y los commits de esta versión están en inglés. Esta arquitectura y los ADR están en español. Ese conjunto usa el diccionario `english`. Un manual puede declarar `spanish`; esa corrida no entra en el conjunto. [ADR-0008](../adr/0008-public-corpus-is-english.md). [ADR-0012](../adr/0012-spanish-manual-is-a-separate-run.md).
 
 ## Prueba
 
@@ -97,4 +97,4 @@ El codespace usa la imagen Linux por defecto y 2 núcleos. No hay prebuild. El R
 
 ## Versión siguiente, todavía no
 
-Juez contrastado con personas. Un índice aproximado solo con latencia y hit@5 medidos. Un manual en español, con el diccionario `spanish` y las mismas métricas antes y después. Trazas, y un MCP cuando otro proceso llame a esta API. Interfaz web. AWS cuando el servicio ya corra en Docker, con el mismo contenedor y sin NAT gateway.
+Juez contrastado con personas. Un índice aproximado solo con latencia y hit@5 medidos. Trazas, y un MCP cuando otro proceso llame a esta API. Interfaz web. AWS cuando el servicio ya corra en Docker, con el mismo contenedor y sin NAT gateway.
