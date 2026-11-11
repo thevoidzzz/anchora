@@ -75,6 +75,30 @@ spanish_hit_at_5: 1.000
 spanish_recall_at_5: 1.000
 ```
 
+On 2026-11-11 `python -m anchora.eval` printed `retrieval_ms_p95: 11.034` and `hit_at_5: 0.951`. That is milliseconds on this corpus. Vector search stays an exact scan. No approximate index was added.
+
+```
+embedding_model: fixed-embedder
+embedding_version: 1
+language_model: citing-stand-in
+questions: 50
+evidence_questions: 41
+hit_at_5: 0.951
+recall_at_5: 0.956
+rerank_hit_at_5: 0.951
+rerank_recall_at_5: 0.956
+citation_validity: 1.000
+supported_answers: 1.000
+citations: 250
+correct_refusals: 0
+false_refusals: 0
+missed_refusals: 9
+retrieval_ms_p95: 11.034
+generation_ms_p95: 0.010
+input_tokens: 250
+output_tokens: 50
+```
+
 ## Tests
 
 GitHub Actions runs `pytest` against PostgreSQL 16 with pgvector, on pull requests and on pushes to `main`. The job installs no model client and uses no API key. Tests embed with a deterministic stand-in.
